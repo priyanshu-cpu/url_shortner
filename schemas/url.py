@@ -1,7 +1,10 @@
 from pydantic import BaseModel
 
 class Url(BaseModel):
-    url = str
+    original_url = str
 
 class UrlOut(BaseModel):
-    pass 
+    original_url: str
+    short_url:str
+    short_code: str
+     
