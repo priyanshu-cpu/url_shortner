@@ -5,6 +5,7 @@ from database import get_db
 from utils.short_code import generate_short_code
 from models.url import Url as Model_url
 from fastapi.responses import RedirectResponse
+from datetime import datetime, timedelta, timezone
 
 router = APIRouter(prefix="/url")
 
@@ -15,7 +16,7 @@ def long_url(body: Url, db:Session = Depends(get_db)):
         original_url = body.original_url,
         short_code = short_code_,
         short_url  = f"localhost:8000/url/{short_code_}",
-        expires_at = 
+        expires_at = datetime.now(timezone.utc) + timedelta(minutes=5)
         )
     db.add(url)
     db.commit()
@@ -32,6 +33,10 @@ def get_url(short_code: str, db : Session =Depends(get_db)):
     find_code = db.query(Model_url).filter(Model_url.short_code == short_code).first()
     if find_code is None:
         raise HTTPException(status_code=404, detail="short code not found!")
+
+    if find_code.expires_at < datetime.now():
+        raise HTTPException(status_code=404, detail="the code has expired!")
+    
     find_code.click_count+=1
     db.commit()
     db.refresh(find_code)

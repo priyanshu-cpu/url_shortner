@@ -9,3 +9,4 @@ class UrlOut(BaseModel):
     short_url:str
     short_code: str
     created_at : datetime
+    expires_at :  datetime

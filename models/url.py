@@ -1,6 +1,6 @@
 from database import Base
 from sqlalchemy import Column, Integer, String, DateTime
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timezone
 
 class Url(Base):
     __tablename__ = "url"
