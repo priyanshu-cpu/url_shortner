@@ -2,7 +2,7 @@ import random
 
 chars_for_code = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
 
-def short_code():
+def generate_short_code():
     res = ""
 
     for _ in range(7):
