@@ -30,4 +30,7 @@ def get_url(short_code: str, db : Session =Depends(get_db)):
     find_code = db.query(Model_url).filter(Model_url.short_code == short_code).first()
     if find_code is None:
         raise HTTPException(status_code=404, detail="short code not found!")
+    find_code.click_count+=1
+    db.commit()
+    db.refresh(find_code)
     return RedirectResponse(url=find_code.original_url)
