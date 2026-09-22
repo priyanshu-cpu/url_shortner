@@ -10,7 +10,7 @@ router = APIRouter(prefix="/url")
 
 @router.post("/create")
 def long_url(body: Url, db:Session = Depends(get_db)):
-    short_code_ = generate_short_code()
+    short_code_ = generate_short_code(db)
     url = Model_url(
         original_url = body.original_url,
         short_code = short_code_

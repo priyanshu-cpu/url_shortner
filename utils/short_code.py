@@ -7,10 +7,11 @@ from models.url import Url
 
 chars_for_code = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
 
-def generate_short_code(db: Session = Depends(get_db)):
+def generate_short_code(db):
     res = ""
     for _ in range(6):
         res += ''.join(random.choices(chars_for_code))
-    data = db.query(Url).all()
-
+    data = db.query(Url).filter(Url.short_code == res).first()
+    if data:
+        return generate_short_code(db)
     return res
