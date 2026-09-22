@@ -13,7 +13,9 @@ def long_url(body: Url, db:Session = Depends(get_db)):
     short_code_ = generate_short_code(db)
     url = Model_url(
         original_url = body.original_url,
-        short_code = short_code_
+        short_code = short_code_,
+        short_url  = f"localhost:8000/url/{short_code_}",
+        expires_at = 
         )
     db.add(url)
     db.commit()
@@ -34,3 +36,10 @@ def get_url(short_code: str, db : Session =Depends(get_db)):
     db.commit()
     db.refresh(find_code)
     return RedirectResponse(url=find_code.original_url)
+
+@router.get("/{short_code}/stats", response_model=UrlOut)
+def get_url_stats(short_code: str, db: Session =Depends(get_db)):
+    data = db.query(Model_url).filter(Model_url.short_code == short_code).first()
+    if not data:
+        raise HTTPException(status_code=404, detail="Not found!")
+    return data
