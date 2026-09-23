@@ -12,26 +12,39 @@ router = APIRouter(prefix="/url")
 @router.post("/create")
 def long_url(body: Url, db:Session = Depends(get_db)):
     short_code_ = generate_short_code(db)
+    if body.custom_code is not None:
+        data = db.query(Model_url).filter(Model_url.custom_code==body.custom_code).first()
+        if data is not None:
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="you can not have this custom code!")
+        
     url = Model_url(
         original_url = body.original_url,
         short_code = short_code_,
         short_url  = f"localhost:8000/url/{short_code_}",
-        expires_at = datetime.now(timezone.utc) + timedelta(minutes=5),
+        expires_at = datetime.now(timezone.utc) + timedelta(days=7),
         custom_code = body.custom_code
         )
     db.add(url)
     db.commit()
     db.refresh(url)
+    if body.custom_code is not None:
+        return{
+            "message" : "short url created",
+            "short_code" : short_code_,
+            "custom_code" : body.custom_code,
+            "short_url" : f"localhost:8000/url/{body.custom_code}"
+        }
 
     return{
         "message" : "short url created",
         "short_code" : short_code_,
         "short_url" : f"localhost:8000/url/{short_code_}"
-    }
+        }
+    
 
 @router.get("/{short_code}")
 def get_url(short_code: str, db : Session =Depends(get_db)):
-    find_code = db.query(Model_url).filter(Model_url.short_code == short_code).first()
+    find_code = db.query(Model_url).filter((Model_url.short_code == short_code) | (Model_url.custom_code == short_code)).first()
     if find_code is None:
         raise HTTPException(status_code=404, detail="short code not found!")
 

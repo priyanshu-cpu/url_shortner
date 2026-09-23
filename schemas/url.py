@@ -6,7 +6,7 @@ class Url(BaseModel):
     original_url: str
     custom_code: str = Field(
         default=None,
-        max_length=6,
+        max_length=10,
         error_message={
             "String_too_long": "Custom code can not be greater than 6 characters!"
         },
