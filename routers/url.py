@@ -16,7 +16,8 @@ def long_url(body: Url, db:Session = Depends(get_db)):
         original_url = body.original_url,
         short_code = short_code_,
         short_url  = f"localhost:8000/url/{short_code_}",
-        expires_at = datetime.now(timezone.utc) + timedelta(minutes=5)
+        expires_at = datetime.now(timezone.utc) + timedelta(minutes=5),
+        custom_code = body.custom_code
         )
     db.add(url)
     db.commit()
