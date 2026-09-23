@@ -12,3 +12,4 @@ class Url(Base):
     created_at = Column(DateTime, default=datetime.now(timezone.utc))
     expires_at = Column(DateTime)
     click_count = Column(Integer, default=0)
+    custom_code = Column(String, nullable=True)
