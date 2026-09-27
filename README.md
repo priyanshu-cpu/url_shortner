@@ -233,10 +233,3 @@ Table: `url`
 | `expires_at`   | DateTime | `created_at` + 7 days         |
 | `click_count`  | Integer  | Defaults to 0                 |
 
-## Roadmap
-
-- [ ] Return `click_count` from the stats endpoint
-- [ ] Validate `original_url` as a proper URL
-- [ ] Configurable base URL and expiry time
-- [ ] User authentication (JWT)
-- [ ] Rate limiting
